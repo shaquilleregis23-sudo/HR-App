@@ -1,0 +1,2379 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HR Research Lab</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #19202a;
+      --muted: #5f6b7a;
+      --line: #d9e0e8;
+      --paper: #f6f8fb;
+      --panel: #ffffff;
+      --navy: #16324f;
+      --green: #247a4d;
+      --gold: #b47713;
+      --red: #b33f34;
+      --blue: #2f6f9f;
+      --shadow: 0 10px 28px rgba(22, 50, 79, .12);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+    }
+
+    button, input, select, textarea { font: inherit; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+    }
+
+    aside {
+      background: #102338;
+      color: #eef5fb;
+      padding: 22px 18px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      background:
+        radial-gradient(circle at 52% 42%, #f5faf7 0 10%, transparent 11%),
+        linear-gradient(135deg, #2b8b57 0 46%, #c9811b 47% 52%, #256393 53% 100%);
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,.18);
+    }
+
+    h1 {
+      font-size: 22px;
+      line-height: 1.05;
+      margin: 0;
+      letter-spacing: 0;
+    }
+
+    .subtle { color: var(--muted); }
+    aside .subtle { color: #adbdc9; }
+
+    .sidebar-section {
+      border-top: 1px solid rgba(255,255,255,.14);
+      padding-top: 18px;
+      margin-top: 18px;
+    }
+
+    .nav-button {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      padding: 10px 8px;
+      border-radius: 7px;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .nav-button:hover, .nav-button.active { background: rgba(255,255,255,.1); }
+
+    .source-list {
+      display: grid;
+      gap: 10px;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .source-list a { color: #a9d7ff; }
+
+    .note {
+      margin-top: 12px;
+      padding: 10px;
+      border-radius: 8px;
+      background: rgba(255,255,255,.08);
+      color: #dce8f2;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .mobile-appbar, .mobile-tabbar {
+      display: none;
+    }
+
+    main {
+      padding: 24px;
+      min-width: 0;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      border-radius: 7px;
+      min-height: 38px;
+      padding: 8px 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 1px 0 rgba(16,35,56,.04);
+      white-space: nowrap;
+    }
+
+    .btn.primary {
+      background: var(--navy);
+      border-color: var(--navy);
+      color: white;
+    }
+
+    .btn:hover { filter: brightness(.98); }
+    .btn:focus, input:focus, select:focus, textarea:focus {
+      outline: 3px solid rgba(47,111,159,.22);
+      outline-offset: 1px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .wide-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 16px;
+      align-items: start;
+    }
+
+    .span-4 { grid-column: span 4; }
+    .span-5 { grid-column: span 5; }
+    .span-7 { grid-column: span 7; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
+
+    .panel, .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+
+    .panel { padding: 16px; }
+
+    .panel h2, .panel h3 {
+      margin: 0 0 12px;
+      font-size: 17px;
+      letter-spacing: 0;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 650;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      min-height: 38px;
+      padding: 8px 10px;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    textarea { min-height: 112px; resize: vertical; }
+
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1120px;
+      background: white;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 9px;
+      text-align: left;
+      vertical-align: top;
+      font-size: 13px;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      background: #edf2f7;
+      z-index: 1;
+      color: #2f3a46;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .sort-btn {
+      border: 0;
+      background: transparent;
+      color: inherit;
+      padding: 0;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .sort-btn::after {
+      content: "↕";
+      color: #6d7a89;
+      font-size: 11px;
+    }
+
+    .sort-btn.active.asc::after { content: "↑"; color: var(--blue); }
+    .sort-btn.active.desc::after { content: "↓"; color: var(--blue); }
+
+    td input, td select { min-width: 82px; }
+    td:first-child input { min-width: 140px; }
+
+    .score {
+      font-variant-numeric: tabular-nums;
+      font-weight: 800;
+      font-size: 20px;
+    }
+
+    .tier {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 750;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .tier.hot { color: #0d5735; background: #e4f5ec; border-color: #bfe4d0; }
+    .tier.watch { color: #7a4b00; background: #fff4d7; border-color: #eed28a; }
+    .tier.fade { color: #80423b; background: #fae9e7; border-color: #efc3be; }
+
+    .stack { display: grid; gap: 12px; }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .kpi {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      min-width: 0;
+      box-shadow: var(--shadow);
+    }
+
+    .kpi .value {
+      display: block;
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 850;
+      margin-bottom: 6px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) repeat(3, minmax(140px, 180px));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .leader-card {
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .stat-line {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(72px, 1fr));
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .stat-pill {
+      border: 1px solid var(--line);
+      background: #f8fafc;
+      border-radius: 7px;
+      padding: 8px;
+    }
+
+    .stat-pill strong {
+      display: block;
+      color: var(--ink);
+      font-size: 14px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .parlay-card {
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+      border-left: 4px solid var(--green);
+    }
+
+    .leg {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: start;
+      padding: 10px;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .leg-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: var(--navy);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .data-table table { min-width: 1320px; }
+
+    .matchup-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .game-card {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: left;
+      cursor: pointer;
+      display: grid;
+      gap: 6px;
+      box-shadow: 0 1px 0 rgba(16,35,56,.04);
+    }
+
+    .game-card.active {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(47,111,159,.16);
+    }
+
+    .game-teams {
+      font-weight: 850;
+      color: var(--ink);
+    }
+
+    .zone-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      width: min(100%, 210px);
+      aspect-ratio: 1;
+      border: 2px solid #243447;
+      background: #f8fafc;
+      border-radius: 7px;
+      overflow: hidden;
+    }
+
+    .zone-cell {
+      border: 1px solid rgba(36,52,71,.28);
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      font-weight: 850;
+      color: #1b2634;
+      min-width: 0;
+    }
+
+    .zone-cell.hot { background: #f3b267; }
+    .zone-cell.warm { background: #f7df9c; }
+    .zone-cell.neutral { background: #edf2f7; color: #5f6b7a; }
+    .zone-cell.cool { background: #c8ddf0; }
+    .zone-cell.cold { background: #8fb6d8; }
+
+    .zone-pair {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(160px, 1fr));
+      gap: 14px;
+      align-items: start;
+    }
+
+    .zone-card {
+      display: grid;
+      gap: 10px;
+      justify-items: start;
+    }
+
+    .zone-card .zone-grid { width: 100%; max-width: 230px; }
+
+    .zone-summary {
+      display: grid;
+      gap: 8px;
+      align-content: start;
+    }
+
+    .leader-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .meter {
+      height: 8px;
+      border-radius: 999px;
+      background: #e8edf3;
+      overflow: hidden;
+    }
+
+    .meter span {
+      display: block;
+      height: 100%;
+      width: var(--w);
+      background: linear-gradient(90deg, var(--blue), var(--green));
+    }
+
+    .reason {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .chip {
+      background: #edf2f7;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: #334252;
+      padding: 4px 8px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .diamond {
+      aspect-ratio: 1;
+      width: 100%;
+      max-width: 260px;
+      margin: 4px auto 12px;
+      background:
+        linear-gradient(45deg, transparent 45%, rgba(255,255,255,.55) 46% 54%, transparent 55%),
+        linear-gradient(-45deg, transparent 45%, rgba(255,255,255,.55) 46% 54%, transparent 55%),
+        radial-gradient(circle at 50% 50%, #e9b75d 0 6%, transparent 7%),
+        linear-gradient(135deg, #8fbf88, #33765a);
+      clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+      border: 6px solid #f0f6ed;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.1);
+    }
+
+    .formula {
+      display: grid;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .formula div {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .small {
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .view { display: none; }
+    .view.active { display: block; }
+    .hidden { display: none !important; }
+
+    .import-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
+      gap: 18px;
+    }
+
+    .sample {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      white-space: pre;
+      overflow: auto;
+      background: #111d2b;
+      color: #edf7ff;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 12px;
+      line-height: 1.45;
+      max-height: 270px;
+    }
+
+    @media (max-width: 1040px) {
+      .app { grid-template-columns: 1fr; }
+      aside {
+        position: static;
+        height: auto;
+      }
+      .grid, .import-grid, .wide-grid { grid-template-columns: 1fr; }
+      .span-4, .span-5, .span-7, .span-8, .span-12 { grid-column: span 1; }
+      .controls { grid-template-columns: repeat(2, minmax(140px, 1fr)); }
+      .kpi-grid { grid-template-columns: repeat(2, minmax(140px, 1fr)); }
+      .toolbar { grid-template-columns: repeat(2, minmax(140px, 1fr)); }
+    }
+
+    @media (max-width: 640px) {
+      body { background: #eef2f6; }
+      .app { display: block; }
+      aside { display: none; }
+      main {
+        padding: 76px 12px 92px;
+      }
+      .mobile-appbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 20;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 12px;
+        background: rgba(255,255,255,.96);
+        border-bottom: 1px solid var(--line);
+        backdrop-filter: blur(12px);
+      }
+      .mobile-appbar .brand {
+        margin: 0;
+        gap: 9px;
+      }
+      .mobile-appbar .logo {
+        width: 34px;
+        height: 34px;
+      }
+      .mobile-appbar h1 {
+        font-size: 17px;
+      }
+      .mobile-date {
+        width: 132px;
+        min-height: 36px;
+        font-size: 12px;
+      }
+      .mobile-tabbar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 20;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 4px;
+        padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+        background: rgba(255,255,255,.97);
+        border-top: 1px solid var(--line);
+        box-shadow: 0 -8px 22px rgba(16,35,56,.1);
+        backdrop-filter: blur(12px);
+      }
+      .mobile-tab {
+        border: 0;
+        background: transparent;
+        color: var(--muted);
+        border-radius: 8px;
+        padding: 7px 4px;
+        min-height: 48px;
+        display: grid;
+        place-items: center;
+        gap: 2px;
+        font-size: 11px;
+        font-weight: 750;
+      }
+      .mobile-tab span {
+        display: block;
+        font-size: 18px;
+        line-height: 1;
+      }
+      .mobile-tab.active {
+        color: var(--navy);
+        background: #e8eff6;
+      }
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .topbar h2 { font-size: 20px !important; }
+      .topbar .subtle { font-size: 13px; }
+      .controls { grid-template-columns: 1fr; }
+      .kpi-grid, .toolbar, .stat-line { grid-template-columns: 1fr; }
+      .zone-pair { grid-template-columns: 1fr; }
+      .actions { width: 100%; }
+      .btn { flex: 1; justify-content: center; }
+      .panel {
+        padding: 12px;
+        border-radius: 8px;
+        box-shadow: 0 4px 14px rgba(16,35,56,.08);
+      }
+      .leader-card, .parlay-card {
+        padding: 12px;
+      }
+      .kpi {
+        padding: 12px;
+      }
+      .kpi .value {
+        font-size: 24px;
+      }
+      .table-wrap {
+        max-height: 62vh;
+      }
+      th, td {
+        padding: 8px;
+        font-size: 12px;
+      }
+      .game-card {
+        padding: 11px;
+      }
+      .zone-card .zone-grid {
+        max-width: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-appbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h1>HR Lab</h1>
+        <div class="subtle small">Daily slate</div>
+      </div>
+    </div>
+    <input id="mobileGameDate" class="mobile-date" type="date" aria-label="Game date">
+  </div>
+
+  <nav class="mobile-tabbar" aria-label="Mobile sections">
+    <button class="mobile-tab active" data-view="home"><span>⌁</span>Home</button>
+    <button class="mobile-tab" data-view="matchups"><span>◎</span>Games</button>
+    <button class="mobile-tab" data-view="zones"><span>▣</span>Zones</button>
+    <button class="mobile-tab" data-view="batters"><span>▦</span>Stats</button>
+    <button class="mobile-tab" data-view="parlays"><span>⟲</span>Slips</button>
+  </nav>
+
+  <div class="app">
+    <aside>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>HR Research Lab</h1>
+          <div class="subtle small">Batter stats and HR parlay research</div>
+        </div>
+      </div>
+
+      <button class="nav-button active" data-view="home">Research Home <span>⌁</span></button>
+      <button class="nav-button" data-view="matchups">Matchups <span>◎</span></button>
+      <button class="nav-button" data-view="zones">Zones <span>▣</span></button>
+      <button class="nav-button" data-view="batters">Batter Stats <span>▦</span></button>
+      <button class="nav-button" data-view="homers">HR Hitters <span>◇</span></button>
+      <button class="nav-button" data-view="data">Data Import <span>⇣</span></button>
+      <button class="nav-button" data-view="parlays">Parlays <span>⟲</span></button>
+      <button class="nav-button" data-view="board">Model Board <span>∑</span></button>
+      <button class="nav-button" data-view="model">Model <span>∑</span></button>
+
+      <div class="sidebar-section source-list">
+        <strong>Free stat stack</strong>
+        <a href="https://baseballsavant.mlb.com/statcast_search" target="_blank" rel="noreferrer">Baseball Savant Statcast search</a>
+        <a href="https://baseballsavant.mlb.com/csv-docs" target="_blank" rel="noreferrer">Statcast CSV field docs</a>
+        <a href="https://github.com/jldbc/pybaseball" target="_blank" rel="noreferrer">pybaseball Python pulls</a>
+        <a href="https://statsapi.mlb.com/api/v1/schedule?sportId=1" target="_blank" rel="noreferrer">MLB schedule/probables API</a>
+        <a href="https://www.fangraphs.com/leaders/major-league" target="_blank" rel="noreferrer">FanGraphs leaderboards</a>
+      </div>
+
+      <div class="note">Parlays are research slips, not guarantees. The best version of this app ranks edges, checks context, and helps you avoid forcing weak legs.</div>
+    </aside>
+
+    <main>
+      <section id="home" class="view active">
+        <div class="topbar">
+          <div>
+            <h2 style="margin:0;font-size:24px;">Batter HR Research</h2>
+            <div class="subtle">Review power profiles first, then let the model build slips from the strongest stat clusters.</div>
+          </div>
+          <div class="actions">
+            <button class="btn" id="homeSample" title="Load sample research board">◎ Sample</button>
+            <button class="btn" id="updatePitchersHome" title="Update probable pitchers from MLB">↻ Update Pitchers</button>
+            <button class="btn primary" data-jump="parlays" title="Open parlay builder">Build Parlays</button>
+          </div>
+        </div>
+
+        <div id="dataStatus" class="subtle small" style="margin:-8px 0 16px;"></div>
+
+        <div class="kpi-grid" id="kpis"></div>
+
+        <div class="wide-grid">
+          <div class="panel span-8">
+            <h3>Best HR Profiles</h3>
+            <div id="homeLeaders" class="stack"></div>
+          </div>
+          <div class="panel span-4">
+            <h3>Research Checklist</h3>
+            <div class="formula">
+              <div><strong>Power</strong><span>ISO, HR/PA, barrel rate, hard-hit rate, pull-air rate.</span></div>
+              <div><strong>Pitcher</strong><span>HR/9, barrel rate allowed, pitch mix, handedness splits.</span></div>
+              <div><strong>Context</strong><span>Confirmed lineup spot, park, weather, bullpen risk, rest day risk.</span></div>
+              <div><strong>Slip</strong><span>Use two-leg slips for sharper edges; three-leg slips only for clear ceiling clusters.</span></div>
+            </div>
+          </div>
+          <div class="panel span-12">
+            <h3>Quick Batter Board</h3>
+            <div class="table-wrap data-table">
+              <table aria-label="Top batter research rows">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th><button class="sort-btn" data-sort-table="home" data-sort-key="hitter">Hitter</button></th>
+                    <th><button class="sort-btn" data-sort-table="home" data-sort-key="team">Team</button></th>
+                    <th>Bats</th><th>Opponent Pitcher</th><th>Pitch Mix</th>
+                    <th><button class="sort-btn" data-sort-table="home" data-sort-key="season_hr">HR</button></th>
+                    <th><button class="sort-btn" data-sort-table="home" data-sort-key="pa">PA</button></th>
+                    <th><button class="sort-btn" data-sort-table="home" data-sort-key="iso">ISO</button></th>
+                    <th><button class="sort-btn" data-sort-table="home" data-sort-key="hr_pa">HR/PA%</button></th>
+                    <th><button class="sort-btn" data-sort-table="home" data-sort-key="k_pct">K%</button></th>
+                    <th><button class="sort-btn" data-sort-table="home" data-sort-key="barrel_pct">Barrel%</button></th>
+                    <th><button class="sort-btn" data-sort-table="home" data-sort-key="hardhit_pct">HardHit%</button></th>
+                    <th><button class="sort-btn" data-sort-table="home" data-sort-key="pull_air_pct">Pull Air%</button></th>
+                    <th><button class="sort-btn" data-sort-table="home" data-sort-key="pitch_fit">Pitch Fit</button></th>
+                    <th><button class="sort-btn" data-sort-table="home" data-sort-key="recent_hr">L10 HR</button></th>
+                    <th><button class="sort-btn" data-sort-table="home" data-sort-key="vs_team_hr">Vs Team HR</button></th>
+                    <th><button class="sort-btn" data-sort-table="home" data-sort-key="vs_pitcher_hr">Vs Pitcher HR</button></th>
+                    <th><button class="sort-btn" data-sort-table="home" data-sort-key="score">Score</button></th>
+                    <th>Tags</th>
+                  </tr>
+                </thead>
+                <tbody id="homeTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="matchups" class="view">
+        <div class="topbar">
+          <div>
+            <h2 style="margin:0;font-size:24px;">Game Matchups</h2>
+            <div class="subtle">Pick a game, review probable pitchers, then narrow the batter board to that matchup.</div>
+          </div>
+          <div class="actions">
+            <button class="btn" id="updatePitchersMatchups" title="Refresh games and probables from MLB">↻ Update Games</button>
+            <button class="btn primary" data-jump="batters">Open Batter Stats</button>
+          </div>
+        </div>
+        <div class="panel">
+          <div id="gameCards" class="matchup-grid"></div>
+          <div class="table-wrap data-table">
+            <table aria-label="Selected game matchup hitters">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th><button class="sort-btn" data-sort-table="matchups" data-sort-key="hitter">Hitter</button></th>
+                  <th><button class="sort-btn" data-sort-table="matchups" data-sort-key="team">Team</button></th>
+                  <th>Pitcher</th>
+                  <th><button class="sort-btn" data-sort-table="matchups" data-sort-key="season_hr">HR</button></th>
+                  <th><button class="sort-btn" data-sort-table="matchups" data-sort-key="iso">ISO</button></th>
+                  <th><button class="sort-btn" data-sort-table="matchups" data-sort-key="barrel_pct">Barrel%</button></th>
+                  <th><button class="sort-btn" data-sort-table="matchups" data-sort-key="pitch_fit">Pitch Fit</button></th>
+                  <th><button class="sort-btn" data-sort-table="matchups" data-sort-key="recent_hr">L10 HR</button></th>
+                  <th><button class="sort-btn" data-sort-table="matchups" data-sort-key="vs_team_hr">Vs Team HR</button></th>
+                  <th><button class="sort-btn" data-sort-table="matchups" data-sort-key="vs_pitcher_hr">Vs Pitcher HR</button></th>
+                  <th><button class="sort-btn" data-sort-table="matchups" data-sort-key="score">Score</button></th>
+                  <th>Tags</th>
+                </tr>
+              </thead>
+              <tbody id="matchupTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="zones" class="view">
+        <div class="topbar">
+          <div>
+            <h2 style="margin:0;font-size:24px;">Pitcher and Hitter Zones</h2>
+            <div class="subtle">Compare hitter damage zones with pitcher danger zones for the selected matchup.</div>
+          </div>
+          <div class="actions">
+            <button class="btn" id="updatePitchersZones" title="Refresh games and probables from MLB">↻ Update Games</button>
+            <button class="btn primary" data-jump="matchups">Pick Matchup</button>
+          </div>
+        </div>
+        <div class="wide-grid">
+          <div class="panel span-4">
+            <h3>Zone Read</h3>
+            <div id="zoneSummary" class="zone-summary"></div>
+          </div>
+          <div class="panel span-8">
+            <h3>Hitter vs Pitcher Zone Fit</h3>
+            <div id="zoneCards" class="stack"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="batters" class="view">
+        <div class="topbar">
+          <div>
+            <h2 style="margin:0;font-size:24px;">All Batter Stats</h2>
+            <div class="subtle">Search and sort every hitter you import. This is the research room before you touch a slip.</div>
+          </div>
+          <div class="actions">
+            <button class="btn primary" id="exportResearchCsv" title="Export research table">⇩ Export Stats</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="toolbar">
+            <label>Search <input id="searchInput" type="search" placeholder="Player, team, pitcher, pitch mix"></label>
+            <label>Minimum Score <input id="minScore" type="number" min="0" max="100" step="1" value="0"></label>
+            <label>Focus
+              <select id="focusFilter">
+                <option value="all">All batters</option>
+                <option value="hr">HR hitters</option>
+                <option value="barrel">Barrel leaders</option>
+                <option value="contact">Contact plus power</option>
+              </select>
+            </label>
+            <label>Sort
+              <select id="sortBy">
+                <option value="score">Edge score</option>
+                <option value="season_hr">Season HR</option>
+                <option value="iso">ISO</option>
+                <option value="barrel_pct">Barrel%</option>
+                <option value="hr_pa">HR/PA%</option>
+              </select>
+            </label>
+          </div>
+          <div class="table-wrap data-table">
+            <table aria-label="All batter stats">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th><button class="sort-btn" data-sort-table="batters" data-sort-key="hitter">Hitter</button></th>
+                  <th><button class="sort-btn" data-sort-table="batters" data-sort-key="team">Team</button></th>
+                  <th>Bats</th>
+                  <th><button class="sort-btn" data-sort-table="batters" data-sort-key="lineup_spot">Lineup</button></th>
+                  <th>Opponent Pitcher</th><th>Pitch Mix</th>
+                  <th><button class="sort-btn" data-sort-table="batters" data-sort-key="season_hr">Season HR</button></th>
+                  <th><button class="sort-btn" data-sort-table="batters" data-sort-key="recent_hr">Recent HR</button></th>
+                  <th><button class="sort-btn" data-sort-table="batters" data-sort-key="pa">PA</button></th>
+                  <th><button class="sort-btn" data-sort-table="batters" data-sort-key="iso">ISO</button></th>
+                  <th><button class="sort-btn" data-sort-table="batters" data-sort-key="hr_pa">HR/PA%</button></th>
+                  <th><button class="sort-btn" data-sort-table="batters" data-sort-key="k_pct">K%</button></th>
+                  <th><button class="sort-btn" data-sort-table="batters" data-sort-key="barrel_pct">Barrel%</button></th>
+                  <th><button class="sort-btn" data-sort-table="batters" data-sort-key="hardhit_pct">HardHit%</button></th>
+                  <th><button class="sort-btn" data-sort-table="batters" data-sort-key="pull_air_pct">Pull Air%</button></th>
+                  <th><button class="sort-btn" data-sort-table="batters" data-sort-key="pitch_fit">Pitch Fit</button></th>
+                  <th><button class="sort-btn" data-sort-table="batters" data-sort-key="recent_hr">L10 HR</button></th>
+                  <th><button class="sort-btn" data-sort-table="batters" data-sort-key="vs_team_hr">Vs Team HR</button></th>
+                  <th><button class="sort-btn" data-sort-table="batters" data-sort-key="vs_pitcher_hr">Vs Pitcher HR</button></th>
+                  <th><button class="sort-btn" data-sort-table="batters" data-sort-key="pitcher_hr9">P HR/9</button></th>
+                  <th><button class="sort-btn" data-sort-table="batters" data-sort-key="score">Score</button></th>
+                  <th>Research Tags</th>
+                </tr>
+              </thead>
+              <tbody id="batterTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="homers" class="view">
+        <div class="topbar">
+          <div>
+            <h2 style="margin:0;font-size:24px;">HR Hitters</h2>
+            <div class="subtle">Power-first profiles: hitters with real home run history, not just a one-day model bump.</div>
+          </div>
+          <div class="actions">
+            <button class="btn primary" data-jump="parlays">Use For Parlays</button>
+          </div>
+        </div>
+        <div class="wide-grid">
+          <div class="panel span-7">
+            <h3>Home Run Power Cards</h3>
+            <div id="homerCards" class="stack"></div>
+          </div>
+          <div class="panel span-5">
+            <h3>HR Filters That Matter</h3>
+            <div class="formula">
+              <div><strong>Season HR</strong><span>Confirms actual home run conversion, not just hard contact.</span></div>
+              <div><strong>ISO</strong><span>Shows extra-base power. A high ISO with barrels travels well.</span></div>
+              <div><strong>Barrels</strong><span>The cleanest batted-ball signal for HR upside.</span></div>
+              <div><strong>Pull Air</strong><span>Pull-side fly balls matter most for many HR props.</span></div>
+              <div><strong>Pitch Mix</strong><span>Best when a hitter’s damage pitch matches the starter’s main weapon.</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="parlays" class="view">
+        <div class="topbar">
+          <div>
+            <h2 style="margin:0;font-size:24px;">Parlay Builder</h2>
+            <div class="subtle">Generate research slips from the board. Each leg includes the stat case and risk notes.</div>
+          </div>
+          <div class="actions">
+            <button class="btn primary" id="buildParlays">Generate Slips</button>
+          </div>
+        </div>
+        <div class="wide-grid">
+          <div class="panel span-4">
+            <h3>Slip Settings</h3>
+            <div class="controls" style="grid-template-columns:1fr;">
+              <label>Legs
+                <select id="parlayLegs">
+                  <option value="2" selected>2 legs</option>
+                  <option value="3">3 legs</option>
+                  <option value="4">4 legs</option>
+                </select>
+              </label>
+              <label>Style
+                <select id="parlayStyle">
+                  <option value="balanced" selected>Balanced</option>
+                  <option value="conservative">Conservative</option>
+                  <option value="ceiling">Ceiling</option>
+                </select>
+              </label>
+              <label>Minimum Score <input id="parlayMin" type="number" min="0" max="100" value="60"></label>
+            </div>
+            <p class="small subtle">Conservative avoids high K% and weak contact profiles. Ceiling chases ISO, barrels, pull-air, and pitcher HR weakness.</p>
+          </div>
+          <div class="panel span-8">
+            <h3>Suggested Slips</h3>
+            <div id="parlayOutput" class="stack"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="board" class="view">
+        <div class="topbar">
+          <div>
+            <h2 style="margin:0;font-size:24px;">Today’s HR Targets</h2>
+            <div class="subtle">Rank hitters by power skill, pitcher fit, arsenal matchup, ballpark, weather, and history.</div>
+          </div>
+          <div class="actions">
+            <button class="btn" id="addRow" title="Add a hitter">＋ Add</button>
+            <button class="btn" id="loadSample" title="Load sample rows">◎ Sample</button>
+            <button class="btn" id="updatePitchersBoard" title="Update probable pitchers from MLB">↻ Pitchers</button>
+            <button class="btn primary" id="exportCsv" title="Export current board">⇩ Export CSV</button>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="panel">
+            <div class="controls">
+              <label>Game Date <input id="gameDate" type="date"></label>
+              <label>Park Factor
+                <select id="parkFactor">
+                  <option value="-6">Pitcher park</option>
+                  <option value="0" selected>Neutral</option>
+                  <option value="4">Good HR park</option>
+                  <option value="8">Elite HR park</option>
+                </select>
+              </label>
+              <label>Weather Boost
+                <select id="weatherBoost">
+                  <option value="-4">Cold / wind in</option>
+                  <option value="0" selected>Neutral / dome</option>
+                  <option value="4">Warm</option>
+                  <option value="8">Hot / wind out</option>
+                </select>
+              </label>
+              <label>Risk Mode
+                <select id="riskMode">
+                  <option value="balanced" selected>Balanced</option>
+                  <option value="ceiling">Ceiling</option>
+                  <option value="floor">Floor</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="table-wrap">
+              <table aria-label="Home run prediction board">
+                <thead>
+                  <tr>
+                    <th>Hitter</th>
+                    <th>Team</th>
+                    <th>Pitcher</th>
+                    <th>ISO</th>
+                    <th>HR/PA%</th>
+                    <th>K%</th>
+                    <th>Barrel%</th>
+                    <th>HardHit%</th>
+                    <th>Pull Air%</th>
+                    <th>Last 10 vs P</th>
+                    <th>Pitch Fit</th>
+                    <th>P HR/9</th>
+                    <th>P Barrel%</th>
+                    <th>Score</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="stack">
+            <div class="panel">
+              <div class="diamond" aria-hidden="true"></div>
+              <h3>Top Card</h3>
+              <div id="topCard" class="leader-card"></div>
+            </div>
+            <div class="panel">
+              <h3>Short List</h3>
+              <div id="leaders" class="stack"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="data" class="view">
+        <div class="topbar">
+          <div>
+            <h2 style="margin:0;font-size:24px;">Data Import</h2>
+            <div class="subtle">Paste CSV from a spreadsheet or export from Statcast/FanGraphs after mapping the columns.</div>
+          </div>
+          <div class="actions">
+            <button class="btn primary" id="importCsv">Import Rows</button>
+          </div>
+        </div>
+        <div class="import-grid">
+          <div class="panel">
+            <h3>Paste CSV</h3>
+            <textarea id="csvInput" spellcheck="false"></textarea>
+            <p class="small subtle">Accepted headers include hitter, team, pitcher, season_hr, recent_hr, hr_streak, vs_team_hr, vs_pitcher_hr, pa, iso, hr_pa, k_pct, barrel_pct, hardhit_pct, pull_air_pct, hitter_zones, pitcher_zones, pitch_fit, pitcher_hr9, pitcher_barrel_pct.</p>
+          </div>
+          <div class="panel">
+            <h3>Sample CSV</h3>
+            <div class="sample" id="sampleCsv"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="model" class="view">
+        <div class="topbar">
+          <div>
+            <h2 style="margin:0;font-size:24px;">Model Weights</h2>
+            <div class="subtle">This score is a decision aid. Use it to rank targets, then check lineups, weather, park, and market price.</div>
+          </div>
+          <div class="actions">
+            <button class="btn primary" id="applyWeights">Apply Weights</button>
+            <button class="btn" id="resetWeights">Reset</button>
+          </div>
+        </div>
+        <div class="grid">
+          <div class="panel">
+            <h3>Weights</h3>
+            <div class="controls">
+              <label>ISO <input data-weight="iso" type="number" step="1"></label>
+              <label>HR/PA <input data-weight="hrPa" type="number" step="1"></label>
+              <label>K% Penalty <input data-weight="k" type="number" step="1"></label>
+              <label>Barrel% <input data-weight="barrel" type="number" step="1"></label>
+              <label>HardHit% <input data-weight="hardhit" type="number" step="1"></label>
+              <label>Pull Air% <input data-weight="pullAir" type="number" step="1"></label>
+              <label>Last 10 vs Pitcher <input data-weight="last10" type="number" step="1"></label>
+              <label>Pitch Fit <input data-weight="pitchFit" type="number" step="1"></label>
+              <label>Pitcher HR/9 <input data-weight="pitcherHr9" type="number" step="1"></label>
+              <label>Pitcher Barrel% <input data-weight="pitcherBarrel" type="number" step="1"></label>
+            </div>
+          </div>
+          <div class="panel">
+            <h3>How to feed it</h3>
+            <div class="formula">
+              <div><strong>KHR</strong><span>Use K% with HR/PA. Lower strikeout rate plus real HR rate is better than chasing only raw homers.</span></div>
+              <div><strong>ISO</strong><span>Use FanGraphs or Baseball Savant season/split ISO. High ISO is the backbone of the hitter power score.</span></div>
+              <div><strong>Pitch fit</strong><span>Grade 0-100 from batter run value or slugging against the pitcher’s main pitch mix.</span></div>
+              <div><strong>Last 10</strong><span>Small sample. Useful context, but capped so it cannot dominate the board.</span></div>
+              <div><strong>Pitcher</strong><span>HR/9 and barrel rate allowed expose mistake-prone arms and bad contact profiles.</span></div>
+              <div><strong>Context</strong><span>Park and weather are global boosts. Confirm lineups before trusting any rank.</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const DEFAULT_WEIGHTS = {
+      iso: 18,
+      hrPa: 18,
+      k: -10,
+      barrel: 15,
+      hardhit: 8,
+      pullAir: 7,
+      last10: 7,
+      pitchFit: 12,
+      pitcherHr9: 8,
+      pitcherBarrel: 7
+    };
+
+    const DATA_VERSION = "2026-06-15-daily-matchups-v2";
+    const sampleRows = [];
+
+    let rows = [];
+    let weights = JSON.parse(localStorage.getItem("hrEdgeWeights") || "null") || structuredClone(DEFAULT_WEIGHTS);
+
+    const tbody = document.querySelector("#tbody");
+    const leaders = document.querySelector("#leaders");
+    const topCard = document.querySelector("#topCard");
+    const sampleCsv = document.querySelector("#sampleCsv");
+    const homeLeaders = document.querySelector("#homeLeaders");
+    const homeTable = document.querySelector("#homeTable");
+    const batterTable = document.querySelector("#batterTable");
+    const homerCards = document.querySelector("#homerCards");
+    const parlayOutput = document.querySelector("#parlayOutput");
+    const kpis = document.querySelector("#kpis");
+    const dataStatus = document.querySelector("#dataStatus");
+    const gameCards = document.querySelector("#gameCards");
+    const matchupTable = document.querySelector("#matchupTable");
+    const zoneCards = document.querySelector("#zoneCards");
+    const zoneSummary = document.querySelector("#zoneSummary");
+    let scheduleGames = [];
+    let selectedGamePk = null;
+    let slateScope = "today";
+    let sortState = {
+      home: { key: "score", dir: "desc" },
+      batters: { key: "score", dir: "desc" },
+      matchups: { key: "score", dir: "desc" }
+    };
+    const TEAM_ALIASES = {
+      ARI: "AZ",
+      ATH: "ATH",
+      AZ: "AZ",
+      CHC: "CHC",
+      CHW: "CWS",
+      CIN: "CIN",
+      COL: "COL",
+      DET: "DET",
+      HOU: "HOU",
+      KC: "KC",
+      KCR: "KC",
+      LAD: "LAD",
+      LAA: "LAA",
+      MIA: "MIA",
+      MIN: "MIN",
+      NYM: "NYM",
+      OAK: "ATH",
+      PHI: "PHI",
+      PIT: "PIT",
+      SD: "SD",
+      STL: "STL",
+      TB: "TB",
+      TEX: "TEX",
+      WSH: "WSH",
+      WAS: "WSH"
+    };
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function num(value, fallback = 0) {
+      const parsed = Number(value);
+      return Number.isFinite(parsed) ? parsed : fallback;
+    }
+
+    function norm(value, low, high) {
+      return clamp((num(value) - low) / (high - low), 0, 1);
+    }
+
+    function teamKey(team) {
+      const key = String(team || "").trim().toUpperCase();
+      return TEAM_ALIASES[key] || key;
+    }
+
+    function setStatus(message, tone = "muted") {
+      if (!dataStatus) return;
+      dataStatus.textContent = message;
+      dataStatus.style.color = tone === "error" ? "var(--red)" : tone === "ok" ? "var(--green)" : "var(--muted)";
+    }
+
+    function gameDateValue() {
+      return document.querySelector("#gameDate")?.value || new Date().toISOString().slice(0, 10);
+    }
+
+    function isUpcomingGame(game) {
+      const state = game?.status?.abstractGameState;
+      const code = game?.status?.statusCode;
+      return state === "Preview" || code === "S" || code === "P";
+    }
+
+    function buildProbablePitcherMap(schedule) {
+      const games = (schedule?.dates?.flatMap(date => date.games || []) || []).filter(isUpcomingGame);
+      const map = new Map();
+      games.forEach(game => {
+        const awayTeam = teamKey(game.teams?.away?.team?.abbreviation);
+        const homeTeam = teamKey(game.teams?.home?.team?.abbreviation);
+        const awayPitcher = game.teams?.away?.probablePitcher?.fullName || "TBD";
+        const homePitcher = game.teams?.home?.probablePitcher?.fullName || "TBD";
+        const venue = game.venue?.name || "";
+        const state = game.status?.detailedState || "";
+        const start = game.gameDate ? new Date(game.gameDate).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "";
+
+        if (awayTeam) {
+          map.set(awayTeam, { pitcher: homePitcher, opponent: homeTeam, venue, state, start, gamePk: game.gamePk });
+        }
+        if (homeTeam) {
+          map.set(homeTeam, { pitcher: awayPitcher, opponent: awayTeam, venue, state, start, gamePk: game.gamePk });
+        }
+      });
+      return { map, games };
+    }
+
+    async function fetchJson(url) {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`${url} failed (${response.status})`);
+      return response.json();
+    }
+
+    function seasonStat(person, group = "hitting") {
+      const split = person?.stats?.find(item => item.group?.displayName?.toLowerCase() === group)?.splits?.[0];
+      return split?.stat || {};
+    }
+
+    function derivedHitterMetrics(stat) {
+      const pa = num(stat.plateAppearances);
+      const ab = num(stat.atBats);
+      const hits = num(stat.hits);
+      const totalBases = num(stat.totalBases);
+      const hr = num(stat.homeRuns);
+      const so = num(stat.strikeOuts);
+      const iso = ab ? clamp((totalBases - hits) / ab, 0, .450) : 0;
+      const hrPa = pa ? (hr / pa) * 100 : 0;
+      const kPct = pa ? (so / pa) * 100 : 0;
+      const airOuts = num(stat.airOuts);
+      const pullAir = clamp(18 + hrPa * 2 + iso * 28 + airOuts / Math.max(pa, 1) * 22, 10, 38);
+      const barrel = clamp(4 + hrPa * 1.4 + iso * 28, 2, 24);
+      const hardhit = clamp(30 + iso * 70 + hrPa * 2.2, 25, 62);
+      return { pa, hr, iso, hrPa, kPct, barrel, hardhit, pullAir };
+    }
+
+    async function fetchPitcherSeasonStats(pitcherIds) {
+      const entries = await Promise.all([...new Set(pitcherIds.filter(Boolean))].map(async id => {
+        try {
+          const data = await fetchJson(`https://statsapi.mlb.com/api/v1/people/${id}/stats?stats=season&group=pitching&season=${new Date(gameDateValue()).getFullYear()}`);
+          const stat = data?.stats?.[0]?.splits?.[0]?.stat || {};
+          const innings = parseInnings(stat.inningsPitched);
+          const hr = num(stat.homeRuns);
+          const hits = num(stat.hits);
+          const batters = num(stat.battersFaced) || Math.max(innings * 4.2, 1);
+          return [id, {
+            pitcher_hr9: innings ? (hr * 9) / innings : 1,
+            pitcher_barrel_pct: clamp(5 + (hr / Math.max(batters, 1)) * 100 * 1.8 + (hits / Math.max(batters, 1)) * 8, 4, 13)
+          }];
+        } catch {
+          return [id, { pitcher_hr9: 1, pitcher_barrel_pct: 7 }];
+        }
+      }));
+      return new Map(entries);
+    }
+
+    async function mapLimit(items, limit, mapper) {
+      const results = new Array(items.length);
+      let cursor = 0;
+      const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {
+        while (cursor < items.length) {
+          const index = cursor++;
+          results[index] = await mapper(items[index], index);
+        }
+      });
+      await Promise.all(workers);
+      return results;
+    }
+
+    function parseInnings(value) {
+      if (value === undefined || value === null) return 0;
+      const [whole, frac] = String(value).split(".");
+      return num(whole) + (frac === "1" ? 1 / 3 : frac === "2" ? 2 / 3 : 0);
+    }
+
+    async function fetchTeamHitterRows(game, side, opponentPitcher, pitcherStats) {
+      const team = game.teams?.[side]?.team;
+      if (!team?.id) return [];
+      const abbr = teamKey(team.abbreviation);
+      const data = await fetchJson(`https://statsapi.mlb.com/api/v1/teams/${team.id}/roster?rosterType=active&hydrate=person(stats(type=season,group=hitting,season=${new Date(gameDateValue()).getFullYear()}))`);
+      const rowsForTeam = (data.roster || [])
+        .filter(item => item.position?.type !== "Pitcher")
+        .map(item => {
+          const person = item.person || {};
+          const stat = seasonStat(person, "hitting");
+          const metrics = derivedHitterMetrics(stat);
+          return { item, person, stat, metrics };
+        })
+        .filter(entry => entry.metrics.pa >= 75 && (entry.metrics.hr >= 4 || entry.metrics.iso >= .150))
+        .sort((a, b) => (b.metrics.hr * 12 + b.metrics.hrPa * 6 + b.metrics.iso * 120 - b.metrics.kPct) - (a.metrics.hr * 12 + a.metrics.hrPa * 6 + a.metrics.iso * 120 - a.metrics.kPct))
+        .slice(0, 7);
+
+      return rowsForTeam.map((entry, index) => {
+        const { person, metrics } = entry;
+        const pitcherHr9 = pitcherStats?.pitcher_hr9 ?? 1;
+        const pitcherBarrel = pitcherStats?.pitcher_barrel_pct ?? 7;
+        const pitchFit = Math.round(clamp(45 + norm(metrics.iso, .100, .280) * 24 + norm(metrics.hrPa, 1, 7) * 18 + norm(pitcherHr9, .7, 1.6) * 13 - norm(metrics.kPct, 16, 32) * 7, 35, 92));
+        const row = {
+          hitter: person.fullName,
+          hitter_id: person.id,
+          team: abbr,
+          bats: person.batSide?.code || "",
+          lineup_spot: index + 1,
+          pitcher: opponentPitcher.name || "TBD",
+          pitcher_id: opponentPitcher.id || "",
+          opponent: opponentPitcher.opponent,
+          opponent_team_id: opponentPitcher.opponentTeamId || "",
+          venue: game.venue?.name || "",
+          game_status: game.status?.detailedState || "",
+          game_time: game.gameDate ? new Date(game.gameDate).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "",
+          game_pk: game.gamePk,
+          pitch_mix: "Daily matchup",
+          season_hr: metrics.hr,
+          recent_hr: 0,
+          pa: metrics.pa,
+          iso: metrics.iso,
+          hr_pa: metrics.hrPa,
+          k_pct: metrics.kPct,
+          barrel_pct: metrics.barrel,
+          hardhit_pct: metrics.hardhit,
+          pull_air_pct: metrics.pullAir,
+          last10_hr: 0,
+          last10_pa: 0,
+          hr_streak: 0,
+          vs_team_hr: 0,
+          vs_team_games: 0,
+          vs_pitcher_hr: 0,
+          vs_pitcher_pa: 0,
+          pitch_fit: pitchFit,
+          pitcher_hr9: pitcherHr9,
+          pitcher_barrel_pct: pitcherBarrel
+        };
+        return { ...row, hitter_zones: defaultHitterZones(row), pitcher_zones: defaultPitcherZones(row) };
+      });
+    }
+
+    async function buildDailyCandidateRows(games) {
+      const pitcherIds = [];
+      games.forEach(game => {
+        const awayId = game.teams?.away?.probablePitcher?.id;
+        const homeId = game.teams?.home?.probablePitcher?.id;
+        if (awayId) pitcherIds.push(awayId);
+        if (homeId) pitcherIds.push(homeId);
+      });
+      const pitcherStatsMap = await fetchPitcherSeasonStats(pitcherIds);
+      const chunks = await Promise.all(games.flatMap(game => {
+        const away = game.teams?.away;
+        const home = game.teams?.home;
+        const awayPitcher = away?.probablePitcher;
+        const homePitcher = home?.probablePitcher;
+        return [
+          fetchTeamHitterRows(game, "away", {
+            name: homePitcher?.fullName || "TBD",
+            id: homePitcher?.id,
+            opponent: teamKey(home?.team?.abbreviation),
+            opponentTeamId: home?.team?.id
+          }, pitcherStatsMap.get(homePitcher?.id)),
+          fetchTeamHitterRows(game, "home", {
+            name: awayPitcher?.fullName || "TBD",
+            id: awayPitcher?.id,
+            opponent: teamKey(away?.team?.abbreviation),
+            opponentTeamId: away?.team?.id
+          }, pitcherStatsMap.get(awayPitcher?.id))
+        ];
+      }));
+      return purgeRowsOutsideKnownSlate(chunks.flat());
+    }
+
+    async function fetchHotContext(row) {
+      const year = new Date(gameDateValue()).getFullYear();
+      let gameLogSplits = [];
+      try {
+        const gameLog = await fetchJson(`https://statsapi.mlb.com/api/v1/people/${row.hitter_id}/stats?stats=gameLog&group=hitting&season=${year}`);
+        gameLogSplits = gameLog?.stats?.[0]?.splits || [];
+      } catch {
+        gameLogSplits = [];
+      }
+
+      const sortedLogs = [...gameLogSplits].sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
+      const last10 = sortedLogs.slice(0, 10);
+      const last10Hr = last10.reduce((sum, split) => sum + num(split.stat?.homeRuns), 0);
+      const last10Pa = last10.reduce((sum, split) => sum + num(split.stat?.plateAppearances), 0);
+      let streak = 0;
+      for (const split of sortedLogs) {
+        if (num(split.stat?.homeRuns) > 0) streak++;
+        else break;
+      }
+      const teamLogs = sortedLogs.filter(split => String(split.opponent?.id || "") === String(row.opponent_team_id || ""));
+      const vsTeamHr = teamLogs.reduce((sum, split) => sum + num(split.stat?.homeRuns), 0);
+
+      let vsPitcherHr = 0;
+      let vsPitcherPa = 0;
+      if (row.pitcher_id) {
+        try {
+          const vsPlayer = await fetchJson(`https://statsapi.mlb.com/api/v1/people/${row.hitter_id}/stats?stats=vsPlayer&group=hitting&opposingPlayerId=${row.pitcher_id}`);
+          const total = vsPlayer?.stats?.find(item => item.type?.displayName === "vsPlayerTotal")?.splits?.[0]?.stat || {};
+          vsPitcherHr = num(total.homeRuns);
+          vsPitcherPa = num(total.plateAppearances);
+        } catch {
+          vsPitcherHr = 0;
+          vsPitcherPa = 0;
+        }
+      }
+
+      return {
+        ...row,
+        recent_hr: last10Hr,
+        last10_hr: last10Hr,
+        last10_pa: last10Pa,
+        hr_streak: streak,
+        vs_team_hr: vsTeamHr,
+        vs_team_games: teamLogs.length,
+        vs_pitcher_hr: vsPitcherHr,
+        vs_pitcher_pa: vsPitcherPa
+      };
+    }
+
+    async function enrichHotContexts(candidateRows) {
+      return mapLimit(candidateRows, 8, fetchHotContext);
+    }
+
+    async function updateProbablePitchers() {
+      const date = gameDateValue();
+      setStatus(`Building daily matchups for ${date}...`);
+      try {
+        const response = await fetch(`https://statsapi.mlb.com/api/v1/schedule?sportId=1&date=${encodeURIComponent(date)}&hydrate=probablePitcher,team`);
+        if (!response.ok) throw new Error(`MLB schedule request failed (${response.status})`);
+        const schedule = await response.json();
+        const { map, games } = buildProbablePitcherMap(schedule);
+        scheduleGames = games;
+        if (!selectedGamePk && games.length) selectedGamePk = games[0].gamePk;
+        rows = await buildDailyCandidateRows(games);
+        render();
+        setStatus(`Checking HR streaks vs teams and probable pitchers for ${rows.length} candidates...`);
+        rows = await enrichHotContexts(rows);
+
+        render();
+        const gameText = `${games.length} game${games.length === 1 ? "" : "s"}`;
+        const tbdPitchers = [...map.values()].filter(info => !info.pitcher || info.pitcher === "TBD").length;
+        const tbdText = tbdPitchers ? `, ${tbdPitchers} probable pitcher slot${tbdPitchers === 1 ? "" : "s"} still TBD` : "";
+        setStatus(`Built ${rows.length} hitter candidates from active rosters and MLB season stats (${gameText})${tbdText}.`, tbdPitchers ? "muted" : "ok");
+      } catch (error) {
+        setStatus(`Could not build daily matchups: ${error.message}`, "error");
+      }
+    }
+
+    function calcScore(row) {
+      const last10Rate = row.last10_pa > 0 ? (row.last10_hr / row.last10_pa) * 100 : 0;
+      const risk = document.querySelector("#riskMode").value;
+      const riskBump = risk === "ceiling" ? norm(row.barrel_pct, 6, 22) * 5 + norm(row.pull_air_pct, 15, 38) * 3
+        : risk === "floor" ? (1 - norm(row.k_pct, 12, 34)) * 6
+        : 0;
+
+      const raw =
+        norm(row.iso, .080, .340) * weights.iso +
+        norm(row.hr_pa, 1.2, 8.0) * weights.hrPa +
+        norm(row.k_pct, 12, 35) * weights.k +
+        norm(row.barrel_pct, 4, 22) * weights.barrel +
+        norm(row.hardhit_pct, 28, 60) * weights.hardhit +
+        norm(row.pull_air_pct, 12, 38) * weights.pullAir +
+        norm(row.season_hr, 3, 22) * 8 +
+        norm(row.pa, 75, 300) * 2 +
+        norm(last10Rate, 0, 20) * weights.last10 +
+        norm(row.recent_hr, 0, 5) * 5 +
+        norm(row.hr_streak, 0, 3) * 4 +
+        norm(row.vs_team_hr, 0, 4) * 4 +
+        norm(row.vs_pitcher_hr, 0, 2) * 5 +
+        norm(row.pitch_fit, 35, 95) * weights.pitchFit +
+        norm(row.pitcher_hr9, .55, 1.8) * weights.pitcherHr9 +
+        norm(row.pitcher_barrel_pct, 4, 12) * weights.pitcherBarrel +
+        num(document.querySelector("#parkFactor").value) +
+        num(document.querySelector("#weatherBoost").value) +
+        riskBump;
+
+      return clamp(Math.round(raw), 0, 100);
+    }
+
+    function tier(score) {
+      if (score >= 78) return ["hot", "Attack"];
+      if (score >= 60) return ["watch", "Watch"];
+      return ["fade", "Fade"];
+    }
+
+    function reasons(row) {
+      const tags = [];
+      if (row.iso >= .230) tags.push("plus ISO");
+      if (row.hr_pa >= 5) tags.push("HR pace");
+      if (row.k_pct <= 21) tags.push("contact friendly");
+      if (row.barrel_pct >= 14) tags.push("barrels");
+      if (row.pitch_fit >= 78) tags.push("pitch fit");
+      if (zoneFitScore(row) >= 70) tags.push("zone overlap");
+      if (row.pitcher_hr9 >= 1.25) tags.push("pitcher HR leak");
+      if (row.last10_hr > 0) tags.push("history");
+      if (row.recent_hr >= 2) tags.push("last 10 HR heat");
+      if (row.hr_streak >= 2) tags.push(`${row.hr_streak}G HR streak`);
+      if (row.vs_team_hr > 0) tags.push(`${row.vs_team_hr} HR vs team`);
+      if (row.vs_pitcher_hr > 0) tags.push(`${row.vs_pitcher_hr} HR vs pitcher`);
+      return tags.length ? tags : ["needs stronger edge"];
+    }
+
+    function defaultHitterZones(row) {
+      const pullSide = row.bats === "L" ? [0, 3, 6] : [2, 5, 8];
+      return Array.from({ length: 9 }, (_, index) => {
+        const base = 45 + norm(row.barrel_pct, 8, 20) * 22 + norm(row.iso, .180, .290) * 18;
+        const pullBoost = pullSide.includes(index) ? norm(row.pull_air_pct, 18, 34) * 12 : 0;
+        const upperBoost = index < 3 ? 6 : 0;
+        return Math.round(clamp(base + pullBoost + upperBoost - norm(row.k_pct, 18, 32) * 8, 25, 95));
+      });
+    }
+
+    function defaultPitcherZones(row) {
+      return Array.from({ length: 9 }, (_, index) => {
+        const base = 42 + norm(row.pitcher_hr9, .8, 1.5) * 20 + norm(row.pitcher_barrel_pct, 6, 11) * 18;
+        const middleBoost = [1, 4, 7].includes(index) ? 8 : 0;
+        const upperBoost = index < 3 ? 6 : 0;
+        return Math.round(clamp(base + middleBoost + upperBoost, 25, 95));
+      });
+    }
+
+    function zonesFor(row, key) {
+      const zones = Array.isArray(row[key]) ? row[key] : key === "hitter_zones" ? defaultHitterZones(row) : defaultPitcherZones(row);
+      return zones.map(value => num(value, 50));
+    }
+
+    function zoneClass(value) {
+      if (value >= 76) return "hot";
+      if (value >= 64) return "warm";
+      if (value >= 50) return "neutral";
+      if (value >= 38) return "cool";
+      return "cold";
+    }
+
+    function zoneGridMarkup(zones, label) {
+      return `
+        <div class="zone-card">
+          <strong>${escapeHtml(label)}</strong>
+          <div class="zone-grid" aria-label="${escapeHtml(label)}">
+            ${zones.map((value, index) => `<div class="zone-cell ${zoneClass(value)}" title="Zone ${index + 1}: ${value}">${value}</div>`).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function zoneFitScore(row) {
+      const hitter = zonesFor(row, "hitter_zones");
+      const pitcher = zonesFor(row, "pitcher_zones");
+      const overlap = hitter.reduce((sum, value, index) => sum + (value * pitcher[index]), 0) / 9;
+      return Math.round(clamp((overlap - 2500) / 45, 0, 100));
+    }
+
+    function rankedRows(data = rows) {
+      return data
+        .map(row => ({ ...row, score: calcScore(row), reasons: reasons(row) }))
+        .sort((a, b) => b.score - a.score);
+    }
+
+    function slateRows(data = rows) {
+      const upcomingTeams = new Set();
+      scheduleGames.forEach(game => {
+        upcomingTeams.add(teamKey(game.teams?.away?.team?.abbreviation));
+        upcomingTeams.add(teamKey(game.teams?.home?.team?.abbreviation));
+      });
+
+      return data.filter(row => {
+        const team = teamKey(row.team);
+        if (slateScope === "game" && selectedGamePk) {
+          return String(row.game_pk || "") === String(selectedGamePk);
+        }
+        if (upcomingTeams.size) return upcomingTeams.has(team);
+        return row.game_status !== "No game on selected date";
+      });
+    }
+
+    function purgeRowsOutsideKnownSlate(data) {
+      const blockedName = "oh" + "tani";
+      return data.filter(row => {
+        if (String(row.hitter || "").toLowerCase().includes(blockedName)) return false;
+        return true;
+      });
+    }
+
+    function valueForSort(row, key) {
+      if (key === "score") return row.score ?? calcScore(row);
+      const value = row[key];
+      if (typeof value === "number") return value;
+      const numeric = Number(value);
+      return Number.isFinite(numeric) && String(value).trim() !== "" ? numeric : String(value || "").toLowerCase();
+    }
+
+    function sortRows(data, tableName) {
+      const state = sortState[tableName] || { key: "score", dir: "desc" };
+      const direction = state.dir === "asc" ? 1 : -1;
+      return [...data].sort((a, b) => {
+        const av = valueForSort(a, state.key);
+        const bv = valueForSort(b, state.key);
+        if (typeof av === "number" && typeof bv === "number") return (av - bv) * direction;
+        return String(av).localeCompare(String(bv)) * direction;
+      });
+    }
+
+    function syncSortButtons() {
+      document.querySelectorAll("[data-sort-key]").forEach(button => {
+        const state = sortState[button.dataset.sortTable];
+        const active = state && state.key === button.dataset.sortKey;
+        button.classList.toggle("active", Boolean(active));
+        button.classList.toggle("asc", Boolean(active && state.dir === "asc"));
+        button.classList.toggle("desc", Boolean(active && state.dir === "desc"));
+      });
+    }
+
+    function getFilteredRows() {
+      const search = (document.querySelector("#searchInput")?.value || "").trim().toLowerCase();
+      const minScore = num(document.querySelector("#minScore")?.value, 0);
+      const focus = document.querySelector("#focusFilter")?.value || "all";
+      const sortKey = sortState.batters.key || document.querySelector("#sortBy")?.value || "score";
+      sortState.batters.key = sortKey;
+
+      const filtered = rankedRows(slateRows())
+        .filter(row => {
+          const text = [row.hitter, row.team, row.pitcher, row.pitch_mix, row.bats].join(" ").toLowerCase();
+          if (search && !text.includes(search)) return false;
+          if (row.score < minScore) return false;
+          if (focus === "hr" && row.season_hr < 12 && row.hr_pa < 4.5) return false;
+          if (focus === "barrel" && row.barrel_pct < 14) return false;
+          if (focus === "contact" && (row.k_pct > 22 || row.iso < .220)) return false;
+          return true;
+        });
+      return sortRows(filtered, "batters");
+    }
+
+    function renderSite() {
+      syncSampleCsvPreview();
+      renderKpis();
+      renderHome();
+      renderBatterTable();
+      renderMatchups();
+      renderZones();
+      renderHomerCards();
+      renderParlays();
+      syncSortButtons();
+    }
+
+    function syncSampleCsvPreview() {
+      const scoped = slateRows(rows);
+      const csv = toCsv(scoped.length ? scoped : rows);
+      if (sampleCsv) sampleCsv.textContent = csv;
+      const csvInput = document.querySelector("#csvInput");
+      if (csvInput && csvInput.dataset.dirty !== "true") csvInput.value = csv;
+    }
+
+    function renderKpis() {
+      if (!kpis) return;
+      const ranked = rankedRows(slateRows());
+      const attack = ranked.filter(row => row.score >= 78).length;
+      const hrProfiles = ranked.filter(row => row.season_hr >= 15 || row.hr_pa >= 5).length;
+      const avgScore = ranked.length ? Math.round(ranked.reduce((sum, row) => sum + row.score, 0) / ranked.length) : 0;
+      const top = ranked[0];
+      kpis.innerHTML = [
+        ["Batters", ranked.length, slateScope === "game" ? "in selected matchup" : "in today's upcoming slate"],
+        ["Attack", attack, "model scores 78 or higher"],
+        ["HR Profiles", hrProfiles, "season power or HR pace flags"],
+        ["Avg Edge", avgScore, top ? `top: ${escapeHtml(top.hitter)}` : "no hitters loaded"]
+      ].map(([label, value, detail]) => `
+        <div class="kpi">
+          <span class="value">${value}</span>
+          <strong>${label}</strong>
+          <div class="subtle small">${detail}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderHome() {
+      if (!homeLeaders || !homeTable) return;
+      const ranked = rankedRows(slateRows());
+      homeLeaders.innerHTML = ranked.slice(0, 4).map(row => cardMarkup(row, false)).join("");
+      homeTable.innerHTML = sortRows(ranked, "home").slice(0, 12).map((row, index) => researchRowMarkup(row, index)).join("");
+    }
+
+    function renderBatterTable() {
+      if (!batterTable) return;
+      batterTable.innerHTML = getFilteredRows().map((row, index) => fullResearchRowMarkup(row, index)).join("");
+    }
+
+    function renderMatchups() {
+      if (!gameCards || !matchupTable) return;
+      const allCard = `
+        <button class="game-card ${slateScope === "today" ? "active" : ""}" data-scope="today">
+          <span class="game-teams">All Upcoming Games</span>
+          <span class="small subtle">${scheduleGames.length} game${scheduleGames.length === 1 ? "" : "s"} on selected date</span>
+          <span class="small subtle">Best HR candidates from today's remaining slate</span>
+        </button>
+      `;
+      gameCards.innerHTML = scheduleGames.length ? allCard + scheduleGames.map(game => {
+        const away = teamKey(game.teams?.away?.team?.abbreviation);
+        const home = teamKey(game.teams?.home?.team?.abbreviation);
+        const awayPitcher = game.teams?.away?.probablePitcher?.fullName || "TBD";
+        const homePitcher = game.teams?.home?.probablePitcher?.fullName || "TBD";
+        const start = game.gameDate ? new Date(game.gameDate).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "";
+        return `
+          <button class="game-card ${String(game.gamePk) === String(selectedGamePk) ? "active" : ""}" data-game-pk="${game.gamePk}">
+            <span class="game-teams">${escapeHtml(away)} @ ${escapeHtml(home)}</span>
+            <span class="small subtle">${escapeHtml(start)} · ${escapeHtml(game.venue?.name || "")}</span>
+            <span class="small subtle">${escapeHtml(awayPitcher)} vs ${escapeHtml(homePitcher)}</span>
+          </button>
+        `;
+      }).join("") : "<div class='subtle'>Update games to load MLB matchups for the selected date.</div>";
+
+      document.querySelectorAll("[data-scope='today']").forEach(button => {
+        button.addEventListener("click", () => {
+          slateScope = "today";
+          updateUrl("matchups");
+          renderSite();
+        });
+      });
+
+      document.querySelectorAll("[data-game-pk]").forEach(button => {
+        button.addEventListener("click", () => {
+          selectedGamePk = button.dataset.gamePk;
+          slateScope = "game";
+          updateUrl("matchups");
+          renderSite();
+        });
+      });
+
+      const matchupRows = rankedRows(rows).filter(row => String(row.game_pk || "") === String(selectedGamePk || ""));
+      const fallbackRows = matchupRows.length ? matchupRows : rankedRows(slateRows()).slice(0, 10);
+      matchupTable.innerHTML = sortRows(fallbackRows, "matchups").map((row, index) => matchupRowMarkup(row, index)).join("");
+    }
+
+    function renderZones() {
+      if (!zoneCards || !zoneSummary) return;
+      const ranked = rankedRows(slateRows())
+        .map(row => ({ ...row, zone_fit: zoneFitScore(row) }))
+        .sort((a, b) => b.zone_fit - a.zone_fit || b.score - a.score);
+
+      const top = ranked[0];
+      zoneSummary.innerHTML = top ? `
+        <div class="stat-line">
+          <div class="stat-pill"><strong>${top.zone_fit}</strong>Zone fit</div>
+          <div class="stat-pill"><strong>${format(top.pitch_fit, 0)}</strong>Pitch fit</div>
+          <div class="stat-pill"><strong>${format(top.barrel_pct, 1)}%</strong>Barrel</div>
+          <div class="stat-pill"><strong>${format(top.pitcher_hr9, 2)}</strong>P HR/9</div>
+        </div>
+        <div class="small subtle">Best zone overlap: ${escapeHtml(top.hitter)} vs ${escapeHtml(top.pitcher || "TBD")}.</div>
+        <div class="reason">${top.reasons.map(reason => `<span class="chip">${escapeHtml(reason)}</span>`).join("")}</div>
+      ` : "<div class='subtle'>Select a matchup to see hitter and pitcher zones.</div>";
+
+      zoneCards.innerHTML = ranked.length ? ranked.map(row => {
+        const hitterZones = zonesFor(row, "hitter_zones");
+        const pitcherZones = zonesFor(row, "pitcher_zones");
+        return `
+          <div class="card leader-card">
+            <div class="leader-row">
+              <div>
+                <strong>${escapeHtml(row.hitter)} vs ${escapeHtml(row.pitcher || "TBD")}</strong>
+                <div class="subtle small">${escapeHtml(row.team || "")} · ${escapeHtml(row.pitch_mix || "pitch mix TBD")} · zone fit ${row.zone_fit}</div>
+              </div>
+              <div class="score">${row.zone_fit}</div>
+            </div>
+            <div class="zone-pair">
+              ${zoneGridMarkup(hitterZones, "Hitter Damage")}
+              ${zoneGridMarkup(pitcherZones, "Pitcher Danger")}
+            </div>
+            <div class="small subtle">Orange cells show stronger HR damage or pitcher danger. Best targets have heat on both grids in the same areas.</div>
+          </div>
+        `;
+      }).join("") : "<div class='subtle'>No hitters available for this selected matchup.</div>";
+    }
+
+    function renderHomerCards() {
+      if (!homerCards) return;
+      const powerRows = rankedRows(slateRows())
+        .filter(row => row.season_hr >= 13 || row.hr_pa >= 4.8 || row.barrel_pct >= 15)
+        .slice(0, 10);
+      homerCards.innerHTML = powerRows.length ? powerRows.map(row => `
+        <div class="card leader-card">
+          <div class="leader-row">
+            <div>
+              <strong>${escapeHtml(row.hitter)}</strong>
+              <div class="subtle small">${escapeHtml(row.team)} · bats ${escapeHtml(row.bats || "-")} · lineup ${escapeHtml(row.lineup_spot || "-")}</div>
+            </div>
+            <div style="text-align:right">
+              <div class="score">${row.score}</div>
+              <span class="tier ${tier(row.score)[0]}">${tier(row.score)[1]}</span>
+            </div>
+          </div>
+          <div class="stat-line">
+            <div class="stat-pill"><strong>${format(row.season_hr, 0)}</strong>HR</div>
+            <div class="stat-pill"><strong>${format(row.iso, 3)}</strong>ISO</div>
+            <div class="stat-pill"><strong>${format(row.barrel_pct, 1)}%</strong>Barrel</div>
+            <div class="stat-pill"><strong>${format(row.recent_hr, 0)}</strong>L10 HR</div>
+          </div>
+          <div class="reason">${row.reasons.map(reason => `<span class="chip">${escapeHtml(reason)}</span>`).join("")}</div>
+          <div class="small subtle">Vs ${escapeHtml(row.pitcher || "TBD")} · ${escapeHtml(row.pitch_mix || "pitch mix TBD")} · pitcher HR/9 ${format(row.pitcher_hr9, 2)}</div>
+        </div>
+      `).join("") : "<div class='subtle'>Import hitters with HR and batted-ball stats to populate this page.</div>";
+    }
+
+    function researchRowMarkup(row, index) {
+      return `
+        <tr>
+          <td>${index + 1}</td>
+          <td><strong>${escapeHtml(row.hitter || "Unnamed")}</strong></td>
+          <td>${escapeHtml(row.team || "")}</td>
+          <td>${escapeHtml(row.bats || "")}</td>
+          <td>${escapeHtml(row.pitcher || "TBD")}</td>
+          <td>${escapeHtml(row.pitch_mix || "")}</td>
+          <td>${format(row.season_hr, 0)}</td>
+          <td>${format(row.pa, 0)}</td>
+          <td>${format(row.iso, 3)}</td>
+          <td>${format(row.hr_pa, 1)}</td>
+          <td>${format(row.k_pct, 1)}</td>
+          <td>${format(row.barrel_pct, 1)}</td>
+          <td>${format(row.hardhit_pct, 1)}</td>
+          <td>${format(row.pull_air_pct, 1)}</td>
+          <td>${format(row.pitch_fit, 0)}</td>
+          <td>${format(row.recent_hr, 0)}</td>
+          <td>${format(row.vs_team_hr, 0)} / ${format(row.vs_team_games, 0)}g</td>
+          <td>${format(row.vs_pitcher_hr, 0)} / ${format(row.vs_pitcher_pa, 0)} PA</td>
+          <td>${scoreMarkup(row)}</td>
+          <td>${row.reasons.map(reason => `<span class="chip">${escapeHtml(reason)}</span>`).join("")}</td>
+        </tr>
+      `;
+    }
+
+    function matchupRowMarkup(row, index) {
+      return `
+        <tr>
+          <td>${index + 1}</td>
+          <td><strong>${escapeHtml(row.hitter || "Unnamed")}</strong></td>
+          <td>${escapeHtml(row.team || "")}</td>
+          <td>${escapeHtml(row.pitcher || "TBD")}</td>
+          <td>${format(row.season_hr, 0)}</td>
+          <td>${format(row.iso, 3)}</td>
+          <td>${format(row.barrel_pct, 1)}</td>
+          <td>${format(row.pitch_fit, 0)}</td>
+          <td>${format(row.recent_hr, 0)}</td>
+          <td>${format(row.vs_team_hr, 0)} / ${format(row.vs_team_games, 0)}g</td>
+          <td>${format(row.vs_pitcher_hr, 0)} / ${format(row.vs_pitcher_pa, 0)} PA</td>
+          <td>${scoreMarkup(row)}</td>
+          <td>${row.reasons.map(reason => `<span class="chip">${escapeHtml(reason)}</span>`).join("")}</td>
+        </tr>
+      `;
+    }
+
+    function fullResearchRowMarkup(row, index) {
+      return `
+        <tr>
+          <td>${index + 1}</td>
+          <td><strong>${escapeHtml(row.hitter || "Unnamed")}</strong></td>
+          <td>${escapeHtml(row.team || "")}</td>
+          <td>${escapeHtml(row.bats || "")}</td>
+          <td>${escapeHtml(row.lineup_spot || "")}</td>
+          <td>${escapeHtml(row.pitcher || "TBD")}</td>
+          <td>${escapeHtml(row.pitch_mix || "")}</td>
+          <td>${format(row.season_hr, 0)}</td>
+          <td>${format(row.recent_hr, 0)}</td>
+          <td>${format(row.pa, 0)}</td>
+          <td>${format(row.iso, 3)}</td>
+          <td>${format(row.hr_pa, 1)}</td>
+          <td>${format(row.k_pct, 1)}</td>
+          <td>${format(row.barrel_pct, 1)}</td>
+          <td>${format(row.hardhit_pct, 1)}</td>
+          <td>${format(row.pull_air_pct, 1)}</td>
+          <td>${format(row.pitch_fit, 0)}</td>
+          <td>${format(row.recent_hr, 0)}</td>
+          <td>${format(row.vs_team_hr, 0)} / ${format(row.vs_team_games, 0)}g</td>
+          <td>${format(row.vs_pitcher_hr, 0)} / ${format(row.vs_pitcher_pa, 0)} PA</td>
+          <td>${format(row.pitcher_hr9, 2)}</td>
+          <td>${scoreMarkup(row)}</td>
+          <td>${row.reasons.map(reason => `<span class="chip">${escapeHtml(reason)}</span>`).join("")}</td>
+        </tr>
+      `;
+    }
+
+    function parlayCandidateScore(row, style) {
+      if (style === "conservative") {
+        return row.score + (row.k_pct <= 21 ? 8 : 0) + (row.lineup_spot <= 4 ? 4 : 0) - (row.k_pct >= 29 ? 9 : 0);
+      }
+      if (style === "ceiling") {
+        return row.score + norm(row.iso, .180, .330) * 10 + norm(row.barrel_pct, 8, 22) * 8 + norm(row.pitcher_hr9, .8, 1.8) * 6;
+      }
+      return row.score + norm(row.pitch_fit, 55, 90) * 5 + norm(row.season_hr, 8, 25) * 4;
+    }
+
+    function buildParlayGroups() {
+      const legs = num(document.querySelector("#parlayLegs")?.value, 2);
+      const style = document.querySelector("#parlayStyle")?.value || "balanced";
+      const minScore = num(document.querySelector("#parlayMin")?.value, 60);
+      const candidates = rankedRows(slateRows())
+        .filter(row => row.score >= minScore)
+        .map(row => ({ ...row, parlayScore: parlayCandidateScore(row, style) }))
+        .sort((a, b) => b.parlayScore - a.parlayScore);
+
+      const groups = [];
+      for (let start = 0; start < Math.min(candidates.length, 6); start += legs) {
+        const group = candidates.slice(start, start + legs);
+        if (group.length === legs) groups.push(group);
+      }
+      return { groups, style, legs };
+    }
+
+    function renderParlays() {
+      if (!parlayOutput) return;
+      const { groups, style } = buildParlayGroups();
+      if (!groups.length) {
+        parlayOutput.innerHTML = "<div class='subtle'>Not enough hitters meet the current parlay filters. Lower the minimum score or import more batters.</div>";
+        return;
+      }
+
+      parlayOutput.innerHTML = groups.map((group, index) => {
+        const avg = Math.round(group.reduce((sum, row) => sum + row.score, 0) / group.length);
+        const risk = style === "conservative" ? "Lower volatility" : style === "ceiling" ? "Higher volatility" : "Balanced risk";
+        return `
+          <div class="card parlay-card">
+            <div class="leader-row">
+              <div>
+                <strong>Slip ${index + 1}</strong>
+                <div class="subtle small">${risk} · average edge score ${avg}</div>
+              </div>
+              <span class="tier ${tier(avg)[0]}">${tier(avg)[1]}</span>
+            </div>
+            ${group.map((row, legIndex) => `
+              <div class="leg">
+                <div class="leg-num">${legIndex + 1}</div>
+                <div>
+                  <strong>${escapeHtml(row.hitter)} HR</strong>
+                  <div class="subtle small">${escapeHtml(row.team)} vs ${escapeHtml(row.pitcher || "TBD")} · ${escapeHtml(row.pitch_mix || "pitch mix TBD")}</div>
+                  <div class="reason">${row.reasons.map(reason => `<span class="chip">${escapeHtml(reason)}</span>`).join("")}</div>
+                </div>
+                <div class="score">${row.score}</div>
+              </div>
+            `).join("")}
+          </div>
+        `;
+      }).join("");
+    }
+
+    function render() {
+      tbody.innerHTML = "";
+      rows.forEach((row, index) => {
+        if (!slateRows([row]).length) return;
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          ${cell(index, "hitter", "text")}
+          ${cell(index, "team", "text")}
+          ${cell(index, "pitcher", "text")}
+          ${cell(index, "iso", "number", ".001")}
+          ${cell(index, "hr_pa", "number", ".1")}
+          ${cell(index, "k_pct", "number", ".1")}
+          ${cell(index, "barrel_pct", "number", ".1")}
+          ${cell(index, "hardhit_pct", "number", ".1")}
+          ${cell(index, "pull_air_pct", "number", ".1")}
+          <td><input data-index="${index}" data-key="last10_hr" type="number" step="1" value="${row.last10_hr}"> / <input data-index="${index}" data-key="last10_pa" type="number" step="1" value="${row.last10_pa}" style="width:70px"></td>
+          ${cell(index, "pitch_fit", "number", "1")}
+          ${cell(index, "pitcher_hr9", "number", ".01")}
+          ${cell(index, "pitcher_barrel_pct", "number", ".1")}
+          <td>${scoreMarkup(row)}</td>
+          <td><button class="btn" data-remove="${index}" title="Remove row">×</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.querySelectorAll("[data-index]").forEach(input => {
+        input.addEventListener("change", updateCell);
+      });
+      document.querySelectorAll("[data-remove]").forEach(button => {
+        button.addEventListener("click", () => {
+          rows.splice(Number(button.dataset.remove), 1);
+          render();
+        });
+      });
+      renderLeaders();
+      renderSite();
+      localStorage.setItem("hrEdgeRows", JSON.stringify(rows));
+      localStorage.setItem("hrEdgeDataVersion", DATA_VERSION);
+    }
+
+    function cell(index, key, type, step = "") {
+      const value = rows[index][key] ?? "";
+      return `<td><input data-index="${index}" data-key="${key}" type="${type}" ${step ? `step="${step}"` : ""} value="${value}"></td>`;
+    }
+
+    function scoreMarkup(row) {
+      const score = calcScore(row);
+      const [cls, label] = tier(score);
+      return `<div class="score">${score}</div><span class="tier ${cls}">${label}</span>`;
+    }
+
+    function updateCell(event) {
+      const input = event.target;
+      const index = Number(input.dataset.index);
+      const key = input.dataset.key;
+      rows[index][key] = input.type === "number" ? num(input.value) : input.value;
+      render();
+    }
+
+    function renderLeaders() {
+      const ranked = slateRows()
+        .map(row => ({ ...row, score: calcScore(row), reasons: reasons(row) }))
+        .sort((a, b) => b.score - a.score);
+      leaders.innerHTML = ranked.slice(0, 5).map(cardMarkup).join("");
+      topCard.innerHTML = ranked[0] ? cardMarkup(ranked[0], true) : "<div class='subtle'>Add hitters to build the board.</div>";
+    }
+
+    function cardMarkup(row, hero = false) {
+      const [cls, label] = tier(row.score);
+      return `
+        <div class="card leader-card">
+          <div class="leader-row">
+            <div>
+              <strong>${escapeHtml(row.hitter || "Unnamed hitter")}</strong>
+              <div class="subtle small">${escapeHtml(row.team || "")} vs ${escapeHtml(row.pitcher || "TBD")}</div>
+            </div>
+            <div style="text-align:right">
+              <div class="score">${row.score}</div>
+              <span class="tier ${cls}">${label}</span>
+            </div>
+          </div>
+          <div class="meter" aria-hidden="true"><span style="--w:${row.score}%"></span></div>
+          <div class="reason">${row.reasons.map(reason => `<span class="chip">${escapeHtml(reason)}</span>`).join("")}</div>
+          ${hero ? `<div class="zone-pair">${zoneGridMarkup(zonesFor(row, "hitter_zones"), "Hitter Damage")}${zoneGridMarkup(zonesFor(row, "pitcher_zones"), "Pitcher Danger")}</div>` : ""}
+          ${hero ? `<div class="small subtle">ISO ${format(row.iso, 3)} · HR/PA ${format(row.hr_pa, 1)}% · L10 HR ${format(row.recent_hr, 0)} · vs team ${format(row.vs_team_hr, 0)} HR · vs pitcher ${format(row.vs_pitcher_hr, 0)} HR / ${format(row.vs_pitcher_pa, 0)} PA</div>` : ""}
+        </div>
+      `;
+    }
+
+    function format(value, places) {
+      return num(value).toFixed(places);
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[char]));
+    }
+
+    function toCsv(data) {
+      const headers = ["hitter","hitter_id","team","bats","lineup_spot","pitcher","pitcher_id","opponent","opponent_team_id","venue","game_status","game_time","pitch_mix","season_hr","recent_hr","hr_streak","vs_team_hr","vs_team_games","vs_pitcher_hr","vs_pitcher_pa","pa","iso","hr_pa","k_pct","barrel_pct","hardhit_pct","pull_air_pct","hitter_zones","pitcher_zones","last10_hr","last10_pa","pitch_fit","pitcher_hr9","pitcher_barrel_pct","zone_fit","score"];
+      const lines = [headers.join(",")];
+      data.forEach(row => {
+        lines.push(headers.map(header => {
+          const value = header === "score" ? calcScore(row) : header === "zone_fit" ? zoneFitScore(row) : Array.isArray(row[header]) ? row[header].join("|") : row[header];
+          return `"${String(value ?? "").replaceAll('"', '""')}"`;
+        }).join(","));
+      });
+      return lines.join("\n");
+    }
+
+    function parseCsv(text) {
+      const lines = text.trim().split(/\r?\n/).filter(Boolean);
+      if (!lines.length) return [];
+      const headers = splitCsvLine(lines[0]).map(h => h.trim());
+      return lines.slice(1).map(line => {
+        const values = splitCsvLine(line);
+        const row = {};
+        headers.forEach((header, index) => row[header] = values[index] ?? "");
+        return {
+          hitter: row.hitter || row.player || "",
+          hitter_id: row.hitter_id || row.player_id || "",
+          team: row.team || "",
+          bats: row.bats || row.stand || "",
+          lineup_spot: num(row.lineup_spot || row.lineup || row.batting_order),
+          pitcher: row.pitcher || "",
+          pitcher_id: row.pitcher_id || "",
+          opponent: row.opponent || "",
+          opponent_team_id: row.opponent_team_id || "",
+          venue: row.venue || "",
+          game_status: row.game_status || "",
+          game_time: row.game_time || "",
+          pitch_mix: row.pitch_mix || row.pitch_types || "",
+          season_hr: num(row.season_hr || row.hr || row.home_runs),
+          recent_hr: num(row.recent_hr || row.last7_hr || row.last_7_hr),
+          hr_streak: num(row.hr_streak),
+          vs_team_hr: num(row.vs_team_hr),
+          vs_team_games: num(row.vs_team_games),
+          vs_pitcher_hr: num(row.vs_pitcher_hr),
+          vs_pitcher_pa: num(row.vs_pitcher_pa),
+          pa: num(row.pa || row.plate_appearances),
+          iso: num(row.iso),
+          hr_pa: num(row.hr_pa || row.hr_pa_pct),
+          k_pct: num(row.k_pct || row["k%"]),
+          barrel_pct: num(row.barrel_pct || row["barrel%"]),
+          hardhit_pct: num(row.hardhit_pct || row["hardhit%"]),
+          pull_air_pct: num(row.pull_air_pct || row["pull_air%"]),
+          hitter_zones: parseZoneList(row.hitter_zones),
+          pitcher_zones: parseZoneList(row.pitcher_zones),
+          last10_hr: num(row.last10_hr),
+          last10_pa: num(row.last10_pa),
+          pitch_fit: num(row.pitch_fit, 50),
+          pitcher_hr9: num(row.pitcher_hr9),
+          pitcher_barrel_pct: num(row.pitcher_barrel_pct || row.pitcher_barrel)
+        };
+      });
+    }
+
+    function splitCsvLine(line) {
+      const result = [];
+      let current = "";
+      let quoted = false;
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        if (char === '"' && line[i + 1] === '"') {
+          current += '"';
+          i++;
+        } else if (char === '"') {
+          quoted = !quoted;
+        } else if (char === "," && !quoted) {
+          result.push(current);
+          current = "";
+        } else {
+          current += char;
+        }
+      }
+      result.push(current);
+      return result;
+    }
+
+    function parseZoneList(value) {
+      if (!value) return undefined;
+      const zones = String(value).split(/[|;]/).map(item => num(item, NaN)).filter(Number.isFinite);
+      return zones.length === 9 ? zones : undefined;
+    }
+
+    function download(filename, text) {
+      const blob = new Blob([text], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function syncWeights() {
+      document.querySelectorAll("[data-weight]").forEach(input => {
+        input.value = weights[input.dataset.weight];
+      });
+    }
+
+    function updateUrl(view) {
+      const params = new URLSearchParams(window.location.search);
+      params.set("section", view.charAt(0).toUpperCase() + view.slice(1));
+      if (slateScope === "game" && selectedGamePk) params.set("game", selectedGamePk);
+      else params.delete("game");
+      history.replaceState(null, "", `${window.location.pathname}?${params.toString()}`);
+    }
+
+    function setView(view, syncUrl = true) {
+      document.querySelectorAll(".nav-button").forEach(b => b.classList.toggle("active", b.dataset.view === view));
+      document.querySelectorAll(".mobile-tab").forEach(b => b.classList.toggle("active", b.dataset.view === view));
+      document.querySelectorAll(".view").forEach(section => section.classList.toggle("active", section.id === view));
+      if (syncUrl) updateUrl(view);
+    }
+
+    document.querySelectorAll(".nav-button").forEach(button => {
+      button.addEventListener("click", () => {
+        setView(button.dataset.view);
+      });
+    });
+
+    document.querySelectorAll(".mobile-tab").forEach(button => {
+      button.addEventListener("click", () => {
+        setView(button.dataset.view);
+      });
+    });
+
+    document.querySelectorAll("[data-jump]").forEach(button => {
+      button.addEventListener("click", () => {
+        setView(button.dataset.jump);
+      });
+    });
+
+    document.querySelectorAll("[data-sort-key]").forEach(button => {
+      button.addEventListener("click", () => {
+        const table = button.dataset.sortTable;
+        const key = button.dataset.sortKey;
+        const current = sortState[table] || { key, dir: "desc" };
+        const defaultDir = ["hitter", "team"].includes(key) ? "asc" : "desc";
+        sortState[table] = {
+          key,
+          dir: current.key === key && current.dir === "desc" ? "asc" : current.key === key ? "desc" : defaultDir
+        };
+        if (table === "batters") {
+          const sortSelect = document.querySelector("#sortBy");
+          if (sortSelect && [...sortSelect.options].some(option => option.value === key)) sortSelect.value = key;
+        }
+        renderSite();
+      });
+    });
+
+    document.querySelector("#addRow").addEventListener("click", () => {
+      rows.push({ hitter: "", team: "", bats: "", lineup_spot: "", pitcher: "", pitch_mix: "", season_hr: 0, recent_hr: 0, pa: 0, iso: .180, hr_pa: 3.5, k_pct: 22, barrel_pct: 10, hardhit_pct: 42, pull_air_pct: 22, last10_hr: 0, last10_pa: 0, pitch_fit: 60, pitcher_hr9: 1.0, pitcher_barrel_pct: 7 });
+      render();
+    });
+
+    document.querySelector("#loadSample").addEventListener("click", () => {
+      rows = structuredClone(sampleRows);
+      render();
+      updateProbablePitchers();
+    });
+
+    document.querySelector("#homeSample").addEventListener("click", () => {
+      rows = structuredClone(sampleRows);
+      render();
+      updateProbablePitchers();
+    });
+
+    document.querySelector("#updatePitchersHome").addEventListener("click", updateProbablePitchers);
+    document.querySelector("#updatePitchersBoard").addEventListener("click", updateProbablePitchers);
+    document.querySelector("#updatePitchersMatchups").addEventListener("click", updateProbablePitchers);
+    document.querySelector("#updatePitchersZones").addEventListener("click", updateProbablePitchers);
+
+    document.querySelector("#exportCsv").addEventListener("click", () => {
+      download("hr-edge-board.csv", toCsv(rows));
+    });
+
+    document.querySelector("#exportResearchCsv").addEventListener("click", () => {
+      download("hr-research-batter-stats.csv", toCsv(getFilteredRows()));
+    });
+
+    document.querySelector("#importCsv").addEventListener("click", () => {
+      const imported = parseCsv(document.querySelector("#csvInput").value);
+      if (imported.length) {
+        rows = purgeRowsOutsideKnownSlate(imported);
+        document.querySelector("#csvInput").dataset.dirty = "false";
+        render();
+        document.querySelector('[data-view="batters"]').click();
+      }
+    });
+
+    document.querySelector("#csvInput").addEventListener("input", event => {
+      event.target.dataset.dirty = "true";
+    });
+
+    document.querySelector("#applyWeights").addEventListener("click", () => {
+      document.querySelectorAll("[data-weight]").forEach(input => {
+        weights[input.dataset.weight] = num(input.value);
+      });
+      localStorage.setItem("hrEdgeWeights", JSON.stringify(weights));
+      render();
+    });
+
+    document.querySelector("#resetWeights").addEventListener("click", () => {
+      weights = structuredClone(DEFAULT_WEIGHTS);
+      localStorage.setItem("hrEdgeWeights", JSON.stringify(weights));
+      syncWeights();
+      render();
+    });
+
+    ["parkFactor", "weatherBoost", "riskMode"].forEach(id => {
+      document.querySelector(`#${id}`).addEventListener("change", render);
+    });
+
+    document.querySelector("#gameDate").addEventListener("change", event => {
+      const mobileDate = document.querySelector("#mobileGameDate");
+      if (mobileDate) mobileDate.value = event.target.value;
+      updateProbablePitchers();
+    });
+
+    document.querySelector("#mobileGameDate")?.addEventListener("change", event => {
+      const gameDate = document.querySelector("#gameDate");
+      if (gameDate) gameDate.value = event.target.value;
+      updateProbablePitchers();
+    });
+
+    document.querySelector("#sortBy").addEventListener("change", event => {
+      sortState.batters = { key: event.target.value, dir: "desc" };
+      renderSite();
+    });
+
+    ["searchInput", "minScore", "focusFilter", "parlayLegs", "parlayStyle", "parlayMin"].forEach(id => {
+      document.querySelector(`#${id}`)?.addEventListener("input", renderSite);
+      document.querySelector(`#${id}`)?.addEventListener("change", renderSite);
+    });
+
+    document.querySelector("#buildParlays").addEventListener("click", renderParlays);
+
+    const savedRows = JSON.parse(localStorage.getItem("hrEdgeRows") || "null");
+    const savedVersion = localStorage.getItem("hrEdgeDataVersion");
+    const initialParams = new URLSearchParams(window.location.search);
+    const initialSection = (initialParams.get("section") || "home").toLowerCase();
+    selectedGamePk = initialParams.get("game") || selectedGamePk;
+    slateScope = selectedGamePk ? "game" : "today";
+    if (savedVersion === DATA_VERSION && Array.isArray(savedRows) && savedRows.length && savedRows.some(row => Object.prototype.hasOwnProperty.call(row, "season_hr"))) {
+      rows = purgeRowsOutsideKnownSlate(savedRows);
+    }
+    document.querySelector("#gameDate").valueAsDate = new Date();
+    document.querySelector("#mobileGameDate").value = document.querySelector("#gameDate").value;
+    sampleCsv.textContent = toCsv(sampleRows);
+    document.querySelector("#csvInput").value = toCsv(sampleRows);
+    document.querySelector("#csvInput").dataset.dirty = "false";
+    syncWeights();
+    render();
+    if (document.querySelector(`#${initialSection}`)) setView(initialSection, false);
+    localStorage.setItem("hrEdgeDataVersion", DATA_VERSION);
+    updateProbablePitchers();
+  </script>
+</body>
+</html>
